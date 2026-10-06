@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Rotator App</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            font-family: sans-serif; 
+            background-color: #121212;
+        }
+        #controls { 
+            padding: 20px; 
+            background: #222; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            z-index: 10; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        #app-window { 
+            flex-grow: 1; 
+            position: relative; 
+            overflow: hidden; 
+            background-color: #000; 
+            background-size: cover; 
+            background-position: center; 
+        }
+        #fixed-image { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            width: 200px; 
+            height: 200px; 
+            /* Centers the image precisely */
+            margin-top: -100px; 
+            margin-left: -100px; 
+            object-fit: contain; 
+            transform: rotate(0deg); 
+            transition: transform 0.1s ease-out;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label>
+            <strong>1. Update Background:</strong><br><br>
+            <input type="file" id="bg-upload" accept="image/*">
+        </label>
+        <label>
+            <strong>2. Rotate Image:</strong><br><br>
+            <input type="range" id="rotation-slider" min="0" max="360" value="0">
+        </label>
+    </div>
+    
+    <div id="app-window">
+        <!-- Swap the src URL below with the local path to your fixed image once hosted -->
+        <img id="fixed-image" src="https://via.placeholder.com/200x200.png?text=Rotating+Image" alt="Rotating Element">
+    </div>
+
+    <script>
+        const bgUpload = document.getElementById('bg-upload');
+        const appWindow = document.getElementById('app-window');
+        const rotationSlider = document.getElementById('rotation-slider');
+        const fixedImage = document.getElementById('fixed-image');
+
+        // Handles the background image upload
+        bgUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    appWindow.style.backgroundImage = `url(${e.target.result})`;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handles the image rotation
+        rotationSlider.addEventListener('input', function() {
+            fixedImage.style.transform = `rotate(${this.value}deg)`;
+        });
+    </script>
+</body>
+</html>
