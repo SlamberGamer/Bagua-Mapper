@@ -27,8 +27,8 @@ select{font:inherit;padding:8px;border-radius:9px;border:1px solid var(--line);b
 input[type=file]{display:none}
 .drop{border:2px dashed var(--line);border-radius:12px;padding:44px 16px;text-align:center;color:var(--mute)}
 .hide{display:none!important}
-#cropWrap{position:relative;margin:0 auto;touch-action:none;user-select:none;line-height:0}
-#cropImg{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+#cropWrap{position:relative;margin:0 auto;max-width:100%;touch-action:none;user-select:none;line-height:0}
+#cropImg{display:block;width:100%;height:100%;object-fit:fill;pointer-events:none;-webkit-user-drag:none}
 #shade{position:absolute;inset:0;pointer-events:none}
 #box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);cursor:move;outline:1px solid rgba(0,0,0,.4)}
 .h{position:absolute;width:22px;height:22px;background:#fff;border:2px solid var(--acc);border-radius:50%}
@@ -102,8 +102,10 @@ function loadPhoto(file){
   const url=URL.createObjectURL(file), im=new Image();
   im.onload=()=>{
     srcImg=im;
-    const maxH=Math.round(innerHeight*0.62);
-    const s=Math.min(MAXW/im.naturalWidth, maxH/im.naturalHeight, 1);
+    const maxH=Math.max(220,Math.round((window.innerHeight||600)*0.62));
+    let cw=Math.floor($('p1').getBoundingClientRect().width-36);
+    if(!(cw>0))cw=Math.floor((document.documentElement.clientWidth||window.innerWidth||360)-68);
+    const s=Math.min(Math.min(MAXW,cw)/im.naturalWidth, maxH/im.naturalHeight, 1);
     W=Math.round(im.naturalWidth*s); H=Math.round(im.naturalHeight*s);
     const wrap=$('cropWrap'); wrap.style.width=W+'px'; wrap.style.height=H+'px';
     $('cropImg').src=url;
